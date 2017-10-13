@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MedBrat</string>
+    <string name="btn_name">Check</string>
 </resources>
