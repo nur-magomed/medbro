@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">MedBrat</string>
     <string name="btn_name">Проверить</string>
+    <string name="lbl_choose1">Выберите лекарство 1</string>
+    <string name="lbl_choose2">Выберите лекарство 2</string>
 </resources>
