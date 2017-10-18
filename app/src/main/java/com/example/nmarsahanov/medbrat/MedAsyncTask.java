@@ -76,10 +76,8 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
         if (medList == null) {
             return;
         }
-
         asyncResponse.processFinish(medList);
     }
-
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
@@ -135,7 +133,7 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
 
 
     /**
-     * Return an {@link Medicine} object by parsing out information
+     * Return a map of med id and names by parsing out information
      * about the first medicine from the input orderJSON string.
      */
     private List<Medicine> extractFeatureFromJson(String orderJSON) {
@@ -153,14 +151,12 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
 
                 JSONObject element = medArray.getJSONObject(i);
                 // Extract out the order values
+
                 int id = element.getInt("id");
                 String name = element.getString("name");
 
-                // Create a new {@link Medicine} object
                 Medicine medicine = new Medicine(id, name);
                 medList.add(medicine);
-
-                Log.i("done", medicine.toString());
             }
 
             return medList;
