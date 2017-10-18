@@ -1,5 +1,6 @@
 package com.example.nmarsahanov.medbrat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,7 +18,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     AutoCompleteTextView autoTextView1;
     AutoCompleteTextView autoTextView2;
     ImageView imageView;
-    String IMAGE_URL = "https://lh3.googleusercontent.com/mxYA2XnI-4eqO2FaqLDoGird7yERflxs4zmthWhIHVKfzbQJZr-ILx_Ea-Fu1vha5A=w300";
+    //String IMAGE_URL = "https://lh3.googleusercontent.com/mxYA2XnI-4eqO2FaqLDoGird7yERflxs4zmthWhIHVKfzbQJZr-ILx_Ea-Fu1vha5A=w300";
+    String IMAGE_URL = "http://rlspro.ru/Interaction?rls1=14596268338890001&tabletId=111&rls2=14596268338890006&ratio=1";
     private List<Medicine> medList      = new ArrayList<>();
     private List<String> medicinesStr   = new ArrayList<>();
 
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         setContentView(R.layout.activity_main);
 
         imageView = (ImageView) findViewById(R.id.img);
-        MedAsyncTask medAsyncTask = new MedAsyncTask();
+        MedAsyncTask medAsyncTask = new MedAsyncTask(this);
         medAsyncTask.asyncResponse = this;
         medAsyncTask.execute();
 
@@ -40,29 +42,55 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,
                         "OnClickListener : " +
-                                "\nSpinner 1 : "+ String.valueOf(autoTextView1.getText()) +
-                                "\nSpinner 2 : "+ String.valueOf(autoTextView2.getText()),
+                                "\nMed 1 : "+ String.valueOf(autoTextView1.getText()) +
+                                "\nMed 2 : "+ String.valueOf(autoTextView2.getText()),
                         Toast.LENGTH_LONG).show();
 
-                  new ImageLoadTask(IMAGE_URL, imageView).execute();
+                  String imgUrl = getImageUrl(String.valueOf(autoTextView1.getText()), String.valueOf(autoTextView2.getText()));
+
+                  new ImageLoadTask(imgUrl, imageView).execute();
             }
         });
     }
 
-    private void initAutoCompletes() {
+    private String getImageUrl(String med1, String med2) {
 
+        String medId1 = getMedicineId(med1);
+        String medId2 = getMedicineId(med2);
+        int h = imageView.getHeight();
+        int w = imageView.getWidth();
+        int ratio = (int) Math.ceil(h/w);
+
+
+        Uri baseUri = Uri.parse(IMAGE_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        String mockID = "1111";
+        //TODO ПОМЕНЯТЬ НА DEVid
+        uriBuilder.appendQueryParameter("rls1", medId1);
+        uriBuilder.appendQueryParameter("tabletId", mockID);
+        uriBuilder.appendQueryParameter("rls2", medId2);
+        uriBuilder.appendQueryParameter("ratio", (String.valueOf(ratio)));
+
+        return uriBuilder.toString();
+    }
+
+    private String getMedicineId(String med) {
+        for(Medicine m: medList){
+            m.getName().equals(med);
+            return String.valueOf(m.getId());
+        }
+        return null;
+    }
+
+    private void initAutoCompletes() {
         autoTextView1 = (AutoCompleteTextView) findViewById(R.id.actv_med1);
         autoTextView2 = (AutoCompleteTextView) findViewById(R.id.actv_med2);
 
-        //String[] meds = (String[]) medMap.values().toArray();
-        // Create the adapter and set it to the AutoCompleteTextView
-
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,medicinesStr);
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,medicinesStr);
         autoTextView1.setAdapter(adapter);
         autoTextView2.setAdapter(adapter);
-
-
     }
 
     @Override

@@ -6,20 +6,20 @@ package com.example.nmarsahanov.medbrat;
 
 public class Medicine {
 
-    private int id;
+    private long id;
     private String name;
 
 
-    public Medicine(int id, String name) {
+    public Medicine(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

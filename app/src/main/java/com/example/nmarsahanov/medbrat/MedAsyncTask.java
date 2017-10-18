@@ -1,6 +1,9 @@
 package com.example.nmarsahanov.medbrat;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.Settings.Secure;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,17 +28,36 @@ import java.util.List;
 
 public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
 
+
+    private Context mContext;
+
+    public MedAsyncTask (Context context){
+        mContext = context;
+    }
     /** Tag for the log messages */
     public static final String LOG_TAG = MedAsyncTask.class.getSimpleName();
 
     /** URL to query the ORDER dataset for user archive */
-    private static final String Medicine_GET_URL = "http://cn71805-wordpress-5.tw1.ru/medget.php?action=select";
+    //private static final String Medicine_GET_URL = "http://cn71805-wordpress-5.tw1.ru/medget.php?action=select";
+    private static final String Medicine_GET_URL = "http://rlspro.ru/RlsShortList";
 
     AsyncResponse asyncResponse = null;
     @Override
     protected List<Medicine> doInBackground(URL... urls) {
+
+        //getting Device Id
+        String android_id = Secure.getString( mContext.getContentResolver(),
+                Secure.ANDROID_ID);
+
+        Uri baseUri = Uri.parse(Medicine_GET_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        String mockID = "1111";
+        //TODO ПОМЕНЯТЬ НА DEVid
+        uriBuilder.appendQueryParameter("tabletId", mockID);
+
         // Create URL object
-        URL url = createUrl(Medicine_GET_URL);
+        URL url = createUrl(uriBuilder.toString());
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";
@@ -152,7 +174,7 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
                 JSONObject element = medArray.getJSONObject(i);
                 // Extract out the order values
 
-                int id = element.getInt("id");
+                long id = element.getLong("id");
                 String name = element.getString("name");
 
                 Medicine medicine = new Medicine(id, name);
