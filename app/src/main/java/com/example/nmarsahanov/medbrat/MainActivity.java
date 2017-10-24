@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     AutoCompleteTextView autoTextView2;
     ImageView imageView;
     //String IMAGE_URL = "https://lh3.googleusercontent.com/mxYA2XnI-4eqO2FaqLDoGird7yERflxs4zmthWhIHVKfzbQJZr-ILx_Ea-Fu1vha5A=w300";
-    String IMAGE_URL = "http://rlspro.ru/Interaction?rls1=14596268338890001&tabletId=111&rls2=14596268338890006&ratio=1";
+    String IMAGE_URL = "http://rlspro.ru/Interaction?";
     private List<Medicine> medList      = new ArrayList<>();
     private List<String> medicinesStr   = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +34,19 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         medAsyncTask.asyncResponse = this;
         medAsyncTask.execute();
 
-
-
-
+        //TODO add three dot menu
         Button btn_submit = (Button) findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,
-                        "OnClickListener : " +
-                                "\nMed 1 : "+ String.valueOf(autoTextView1.getText()) +
-                                "\nMed 2 : "+ String.valueOf(autoTextView2.getText()),
-                        Toast.LENGTH_LONG).show();
 
-                  String imgUrl = getImageUrl(String.valueOf(autoTextView1.getText()), String.valueOf(autoTextView2.getText()));
-
-                  new ImageLoadTask(imgUrl, imageView).execute();
+                if (autoTextView1.getText().toString().trim().equals("") ||
+                    autoTextView2.getText().toString().trim().equals("")){
+                    Toast.makeText(MainActivity.this, "Введите название лекарства", Toast.LENGTH_SHORT).show();
+                } else {
+                    String imgUrl = getImageUrl(String.valueOf(autoTextView1.getText()), String.valueOf(autoTextView2.getText()));
+                    new ImageLoadTask(imgUrl, imageView).execute();
+                }
             }
         });
     }
@@ -57,9 +55,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
         String medId1 = getMedicineId(med1);
         String medId2 = getMedicineId(med2);
-        int h = imageView.getHeight();
-        int w = imageView.getWidth();
-        int ratio = (int) Math.ceil(h/w);
+        int ratio = 1;
 
 
         Uri baseUri = Uri.parse(IMAGE_URL);
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         String mockID = "1111";
         //TODO ПОМЕНЯТЬ НА DEVid
         uriBuilder.appendQueryParameter("rls1", medId1);
-        uriBuilder.appendQueryParameter("tabletId", mockID);
+        uriBuilder.appendQueryParameter("deviceId", mockID);
         uriBuilder.appendQueryParameter("rls2", medId2);
         uriBuilder.appendQueryParameter("ratio", (String.valueOf(ratio)));
 
@@ -77,10 +73,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
     private String getMedicineId(String med) {
         for(Medicine m: medList){
-            m.getName().equals(med);
-            return String.valueOf(m.getId());
+            if(m.getName().equals(med)){
+                return String.valueOf(m.getId());
+            }
         }
-        return null;
+        return "10000042";
     }
 
     private void initAutoCompletes() {
@@ -101,11 +98,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     }
 
     private void loadStringList() {
-
         for (Medicine m: medList){
             medicinesStr.add(m.getName());
         }
-
     }
 
 

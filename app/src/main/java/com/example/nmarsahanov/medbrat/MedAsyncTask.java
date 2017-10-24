@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,14 +38,14 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
     /** Tag for the log messages */
     public static final String LOG_TAG = MedAsyncTask.class.getSimpleName();
 
-    /** URL to query the ORDER dataset for user archive */
-    //private static final String Medicine_GET_URL = "http://cn71805-wordpress-5.tw1.ru/medget.php?action=select";
+    /** URL to query the Medicine dataset from the server */
     private static final String Medicine_GET_URL = "http://rlspro.ru/RlsShortList";
 
     AsyncResponse asyncResponse = null;
     @Override
     protected List<Medicine> doInBackground(URL... urls) {
 
+        List<Medicine> medList = new ArrayList<>();
         //getting Device Id
         String android_id = Secure.getString( mContext.getContentResolver(),
                 Secure.ANDROID_ID);
@@ -54,7 +55,7 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
 
         String mockID = "1111";
         //TODO ПОМЕНЯТЬ НА DEVid
-        uriBuilder.appendQueryParameter("tabletId", mockID);
+        uriBuilder.appendQueryParameter("deviceId", mockID);
 
         // Create URL object
         URL url = createUrl(uriBuilder.toString());
@@ -65,10 +66,11 @@ public class MedAsyncTask extends AsyncTask<URL, Void, List<Medicine>> {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error with creating URL ** " + e.getMessage());
+            return medList;
         }
 
         // Extract relevant fields from the JSON response and create an {@link Medicine} object
-        List<Medicine> medList = extractFeatureFromJson(jsonResponse);
+        medList = extractFeatureFromJson(jsonResponse);
 
         // Return the {@link Medicine} object as the result fo the {@link MedAsyncTask}
         return medList;

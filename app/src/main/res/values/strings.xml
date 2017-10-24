@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MedBrat</string>
+    <string name="app_name">PharmaSafe</string>
     <string name="btn_name">Check</string>
     <string name="lbl_choose1">Choose medicine 1</string>
     <string name="lbl_choose2">Choose medicine 2</string>
