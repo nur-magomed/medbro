@@ -4,4 +4,5 @@
     <string name="lbl_choose1">Choose medicine 1</string>
     <string name="lbl_choose2">Choose medicine 2</string>
     <string name="header">Medicine Interaction Checker</string>
+    <string name="menu_about">about</string>
 </resources>
