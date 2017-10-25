@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
+
+    RelativeLayout rlLoadingIndicatior;
     AutoCompleteTextView autoTextView1;
     AutoCompleteTextView autoTextView2;
     ImageView imageView;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        rlLoadingIndicatior = (RelativeLayout) findViewById(R.id.rl_load_indicator);
         imageView = (ImageView) findViewById(R.id.img);
         MedAsyncTask medAsyncTask = new MedAsyncTask(this);
         medAsyncTask.asyncResponse = this;
@@ -46,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                     autoTextView2.getText().toString().trim().equals("")){
                     Toast.makeText(MainActivity.this, "Введите название лекарства", Toast.LENGTH_SHORT).show();
                 } else {
+                    imageView.setVisibility(View.GONE);
+                    rlLoadingIndicatior.setVisibility(View.VISIBLE);
                     String imgUrl = getImageUrl(String.valueOf(autoTextView1.getText()), String.valueOf(autoTextView2.getText()));
-                    new ImageLoadTask(imgUrl, imageView).execute();
+                    new ImageLoadTask(imgUrl, imageView, rlLoadingIndicatior).execute();
                 }
             }
         });

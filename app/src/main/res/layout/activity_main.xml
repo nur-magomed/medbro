@@ -46,27 +46,46 @@
                 android:layout_below="@id/actv_med1"/>
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/rl_load_indicator"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <!-- Loading indicator is only shown before the first load -->
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
         <ImageView
             android:id="@+id/img"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:visibility="gone"/>
 
 
 
-            <Button
-                android:id="@+id/btn_submit"
-                android:layout_weight="0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_name"
-                android:textColor="@android:color/white"
-                android:background="@color/colorGreenAccent"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginBottom="10dp"/>
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_weight="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_name"
+            android:textColor="@android:color/white"
+            android:background="@color/colorGreenAccent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="10dp"/>
 
 
 </LinearLayout>
