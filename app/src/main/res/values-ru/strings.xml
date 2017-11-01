@@ -6,4 +6,5 @@
     <string name="lbl_choose2">Лекарство 2</string>
     <string name="header">Проверка лекарственного взаимодействия</string>
     <string name="menu_about">О программе</string>
+    <string name="conn_problems">Проблемы с соединением</string>
 </resources>

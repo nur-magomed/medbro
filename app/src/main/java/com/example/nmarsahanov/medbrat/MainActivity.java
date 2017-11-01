@@ -1,16 +1,22 @@
 package com.example.nmarsahanov.medbrat;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
 
     RelativeLayout rlLoadingIndicatior;
+    TextView connProblemsTv;
+    ProgressBar loadingIndicator;
     AutoCompleteTextView autoTextView1;
     AutoCompleteTextView autoTextView2;
     ImageView imageView;
@@ -35,10 +43,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         setContentView(R.layout.activity_main);
 
         rlLoadingIndicatior = (RelativeLayout) findViewById(R.id.rl_load_indicator);
+        connProblemsTv = (TextView) findViewById(R.id.tv_connection_problem);
+        loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+
         imageView = (ImageView) findViewById(R.id.img);
         MedAsyncTask medAsyncTask = new MedAsyncTask(this);
         medAsyncTask.asyncResponse = this;
         medAsyncTask.execute();
+
+
 
         //TODO add three dot menu
         Button btn_submit = (Button) findViewById(R.id.btn_submit);
@@ -52,8 +65,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                 } else {
                     imageView.setVisibility(View.GONE);
                     rlLoadingIndicatior.setVisibility(View.VISIBLE);
+                    connProblemsTv.setVisibility(View.INVISIBLE);
+                    loadingIndicator.setVisibility(View.VISIBLE);
                     String imgUrl = getImageUrl(String.valueOf(autoTextView1.getText()), String.valueOf(autoTextView2.getText()));
-                    new ImageLoadTask(imgUrl, imageView, rlLoadingIndicatior).execute();
+
+                    // Get a reference to the ConnectivityManager to check state of network connectivity
+                    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    // Get details on the currently active default data network
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    // If there is a network connection, fetch data
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        new ImageLoadTask(imgUrl, imageView, rlLoadingIndicatior).execute();
+                    } else {
+                        // Otherwise, display error
+                        // First, hide loading indicator so error message will be visible
+                        rlLoadingIndicatior.setVisibility(View.INVISIBLE);
+                        connProblemsTv.setVisibility(View.VISIBLE);
+                    }
+
                 }
             }
         });
@@ -76,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private String getImageUrl(String med1, String med2) {
@@ -115,6 +150,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,medicinesStr);
         autoTextView1.setAdapter(adapter);
         autoTextView2.setAdapter(adapter);
+
+        autoTextView1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        autoTextView2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
     }
 
     @Override
