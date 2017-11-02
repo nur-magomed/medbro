@@ -6,4 +6,9 @@
     <string name="header">Medicine Interaction Checker</string>
     <string name="menu_about">about</string>
     <string name="conn_problems">Connection problems</string>
+    <string name="about">This application is only informative. We strongly recomend you to discuss with you doctor before taking any medecine.</string>
+    <string name="developer">Developer: Nur-Magomed Arsakhanov</string>
+    <string name="author_email">somemail</string>
+    <string name="developer_email">fromaldy@gmail.com</string>
+    <string name="author">Author: Eugine Vassaev</string>
 </resources>

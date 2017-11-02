@@ -1,6 +1,7 @@
 package com.example.nmarsahanov.medbrat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -51,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         medAsyncTask.asyncResponse = this;
         medAsyncTask.execute();
 
-
-
         //TODO add three dot menu
         Button btn_submit = (Button) findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +100,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
         //on menu item click 'about'
         if (id == R.id.action_about) {
-            return true;
+            Intent inent = new Intent(MainActivity.this, activity_about.class);
+            startActivity(inent);
+
         }
 
         return super.onOptionsItemSelected(item);

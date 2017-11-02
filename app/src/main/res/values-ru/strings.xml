@@ -7,4 +7,9 @@
     <string name="header">Проверка лекарственного взаимодействия</string>
     <string name="menu_about">О программе</string>
     <string name="conn_problems">Проблемы с соединением</string>
+    <string name="about">This application is only informative. We strongly recomend you to discuss with you doctor before taking any medecine.</string>
+    <string name="author">Автор: Евгений Вассаев</string>
+    <string name="developer">Разработчик: Нур-Магомед Арсаханов</string>
+    <string name="author_email">somemail</string>
+    <string name="developer_email">fromaldy@gmail.com</string>
 </resources>

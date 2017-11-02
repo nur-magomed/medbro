@@ -6,7 +6,8 @@
     android:orientation="vertical"
     tools:context="com.example.nmarsahanov.medbrat.MainActivity"
     android:clickable="true"
-    android:focusableInTouchMode="true" >
+    android:focusableInTouchMode="true"
+    android:backgroundTint="@android:color/white">
 
 
     <RelativeLayout
